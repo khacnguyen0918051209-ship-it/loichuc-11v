@@ -119,11 +119,7 @@
       alert("Số này chưa có lời chúc 💔");
       return;
     }
-
-    // ẨN KHUNG NHẬP
     document.getElementById("box").style.display = "none";
-
-    // BẮT ĐẦU MƯA CHỮ
     setInterval(() => createText(wishes[n]), 200);
     setInterval(() => createText("💖"), 120);
   }
@@ -132,7 +128,6 @@
     const el = document.createElement("div");
     el.className = "float";
     el.innerText = text;
-
     el.style.left = Math.random() * 100 + "vw";
     el.style.top = "110vh";
     el.style.fontSize = 14 + Math.random() * 18 + "px";
@@ -146,4 +141,5 @@
 </body>
 
 </html>
+
 
