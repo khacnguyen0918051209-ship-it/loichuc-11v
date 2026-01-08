@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Lời chúc dành riêng</title>
+
+<style>
+  body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+
+  .center {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    color: #ff6fae;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 18px;
+    width: 220px;
+    text-align: center;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #ff6fae;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .float {
+    position: absolute;
+    color: #ff6fae;
+    font-size: 20px;
+    animation: fly linear forwards;
+    opacity: 0.9;
+    pointer-events: none;
+    text-shadow: 0 0 8px #ff6fae;
+  }
+
+  @keyframes fly {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-120vh);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="center" id="box">
+  <h2>Nhập số thứ tự của bạn 💖</h2>
+  <input id="num" type="number" placeholder="VD: 1">
+  <br>
+  <button onclick="start()">Xem lời chúc</button>
+</div>
+
+<script>
+  const wishes = {
+    1: "I love you 💕",
+    2: "You are my sunshine 🌸",
+    3: "Forever with you 💖",
+    4: "You make my heart smile 💞",
+    5: "My only one 💘"
+    // thêm tới 35
+  };
+
+  function start() {
+    const n = document.getElementById("num").value;
+    if (!wishes[n]) {
+      alert("Số này chưa có lời chúc 💔");
+      return;
+    }
+
+    // ẨN KHUNG NHẬP
+    document.getElementById("box").style.display = "none";
+
+    // BẮT ĐẦU MƯA CHỮ
+    setInterval(() => createText(wishes[n]), 200);
+    setInterval(() => createText("💖"), 120);
+  }
+
+  function createText(text) {
+    const el = document.createElement("div");
+    el.className = "float";
+    el.innerText = text;
+
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.top = "110vh";
+    el.style.fontSize = 14 + Math.random() * 18 + "px";
+    el.style.animationDuration = 6 + Math.random() * 6 + "s";
+
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 12000);
+  }
+</script>
+
+</body>
+</html>
