@@ -2,144 +2,184 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Lời chúc dành riêng</title>
+<title>Lời chúc bí mật</title>
 
 <style>
-  body {
-    margin: 0;
-    background: black;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-  }
+body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
 
-  .center {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 10;
-    color: #ff6fae;
-  }
+#inputBox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  z-index: 10;
+}
 
-  input {
-    padding: 10px;
-    font-size: 18px;
-    width: 220px;
-    text-align: center;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-  }
+#inputBox input {
+  font-size: 22px;
+  padding: 10px 16px;
+  width: 200px;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+}
 
-  button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background: #ff6fae;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
+#scene {
+  width: 100vw;
+  height: 100vh;
+  perspective: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .float {
-    position: absolute;
-    color: #ff6fae;
-    font-size: 20px;
-    animation: fly linear forwards;
-    opacity: 0.9;
-    pointer-events: none;
-    text-shadow: 0 0 8px #ff6fae;
-  }
+#world {
+  width: 420px;
+  height: 420px;
+  position: relative;
+  transform-style: preserve-3d;
+}
 
-  @keyframes fly {
-    from {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateY(-120vh);
-      opacity: 0;
-    }
-  }
+.text3d {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #ff5fa2;
+  font-size: 18px;
+  text-shadow: 0 0 12px #ff5fa2;
+  white-space: nowrap;
+  transform-style: preserve-3d;
+  animation: float 12s linear infinite;
+}
+
+@keyframes float {
+  0%   { transform: translate3d(var(--x), var(--y), var(--z)); opacity: 0 }
+  10%  { opacity: 1 }
+  90%  { opacity: 1 }
+  100% { transform: translate3d(var(--x2), var(--y2), var(--z2)); opacity: 0 }
+}
+
+.heart {
+  position: absolute;
+  color: pink;
+  font-size: 14px;
+  animation: heart 6s linear infinite;
+}
+
+@keyframes heart {
+  from { transform: translateY(0) scale(1); opacity: 1 }
+  to   { transform: translateY(-200px) scale(1.6); opacity: 0 }
+}
 </style>
 </head>
 
 <body>
 
-<div class="center" id="box">
-  <h2>Nhập số thứ tự của bạn 💖</h2>
-  <input id="num" type="number" placeholder="VD: 1">
-  <br>
-  <button onclick="start()">Xem lời chúc</button>
+<div id="inputBox">
+  <input id="sttInput" type="number" placeholder="Nhập STT (1-35)">
+</div>
+
+<div id="scene">
+  <div id="world"></div>
 </div>
 
 <script>
-  const wishes = {
-    1: "STT: 1",
-    2: "STT: 2",
-    3: "STT: 3",
-    4: "STT: 4",
-    5: "STT: 5",
-    6: "STT: 6",
-    7: "STT: 7",
-    8: "STT: 8",
-    9: "STT: 9",
-    10: "STT: 10",
-    11: "STT: 11",
-    12: "STT: 12",
-    13: "STT: 13",
-    14: "STT: 14",
-    15: "STT: 15",
-    16: "STT: 16",
-    17: "STT: 17",
-    18: "STT: 18",
-    19: "STT: 19",
-    20: "STT: 20",
-    21: "STT: 21",
-    22: "STT: 22",
-    23: "STT: 23",
-    24: "STT: 24",
-    25: "STT: 25",
-    26: "STT: 26",
-    27: "STT: 27",
-    28: "STT: 28",
-    29: "STT: 29",
-    30: "STT: 30",
-    31: "STT: 31",
-    32: "STT: 32",
-    33: "STT: 33",
-    34: "STT: 34",
-    35: "STT: 35",
-  };
+const wishes = {
+  1: "STT: 1",
+  2: "STT: 2",
+  3: "STT: 3",
+  4: "STT: 4",
+  5: "STT: 5",
+  6: "STT: 6",
+  7: "STT: 7",
+  8: "STT: 8",
+  9: "STT: 9",
+  10: "STT: 10",
+  11: "STT: 11",
+  12: "STT: 12",
+  13: "STT: 13",
+  14: "STT: 14",
+  15: "STT: 15",
+  16: "STT: 16",
+  17: "STT: 17",
+  18: "STT: 18",
+  19: "STT: 19",
+  20: "STT: 20",
+  21: "STT: 21",
+  22: "STT: 22",
+  23: "STT: 23",
+  24: "STT: 24",
+  25: "STT: 25",
+  26: "STT: 26",
+  27: "STT: 27",
+  28: "STT: 28",
+  29: "STT: 29",
+  30: "STT: 30",
+  31: "STT: 31",
+  32: "STT: 32",
+  33: "STT: 33",
+  34: "STT: 34",
+  35: "STT: 35"
+};
 
-  function start() {
-    const n = document.getElementById("num").value;
-    if (!wishes[n]) {
-      alert("Số này chưa có lời chúc 💔");
-      return;
-    }
-    document.getElementById("box").style.display = "none";
-    setInterval(() => createText(wishes[n]), 200);
-    setInterval(() => createText("💖"), 120);
+const input = document.getElementById("sttInput");
+const box = document.getElementById("inputBox");
+const world = document.getElementById("world");
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const n = Number(input.value);
+    if (!wishes[n]) return alert("STT không hợp lệ");
+    box.style.display = "none";
+    startEffect(wishes[n]);
   }
+});
 
-  function createText(text) {
+function startEffect(text) {
+  for (let i = 0; i < 30; i++) {
     const el = document.createElement("div");
-    el.className = "float";
+    el.className = "text3d";
     el.innerText = text;
-    el.style.left = Math.random() * 100 + "vw";
-    el.style.top = "110vh";
-    el.style.fontSize = 14 + Math.random() * 18 + "px";
-    el.style.animationDuration = 6 + Math.random() * 6 + "s";
 
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 12000);
+    const x = (Math.random() - 0.5) * 200;
+    const y = (Math.random() - 0.5) * 200;
+    const z = (Math.random() - 0.5) * 300;
+
+    el.style.setProperty("--x", `${x}px`);
+    el.style.setProperty("--y", `${y}px`);
+el.style.setProperty("--z", `${z}px`);
+    el.style.setProperty("--x2", `${x}px`);
+    el.style.setProperty("--y2", `${y - 80}px`);
+    el.style.setProperty("--z2", `${z + 200}px`);
+
+    world.appendChild(el);
   }
+
+  setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "💗";
+    h.style.left = Math.random() * window.innerWidth + "px";
+    h.style.bottom = "0px";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 6000);
+  }, 200);
+}
+
+let rx = 0, ry = 0;
+document.addEventListener("mousemove", e => {
+  ry = (e.clientX / window.innerWidth - 0.5) * 30;
+  rx = -(e.clientY / window.innerHeight - 0.5) * 30;
+  world.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+});
 </script>
 
 </body>
-
 </html>
-
-
