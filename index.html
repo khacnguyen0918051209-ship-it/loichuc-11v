@@ -15,26 +15,30 @@ html, body {
   font-family: Arial, sans-serif;
 }
 
-#inputBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
+/* ===== MÀN HÌNH NHẬP ===== */
+#inputOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
 }
 
-input {
-  padding: 14px 22px;
-  font-size: 18px;
-  border-radius: 10px;
+#inputBox input {
+  padding: 16px 26px;
+  font-size: 20px;
+  border-radius: 14px;
   border: none;
   outline: none;
 }
 
+/* ===== KHÔNG GIAN 3D ===== */
 #scene {
   width: 100%;
   height: 100%;
-  perspective: 900px;
+  perspective: 1200px;
 }
 
 #world {
@@ -45,6 +49,7 @@ input {
   transform: translate(-50%, -50%);
 }
 
+/* ===== CHỮ ===== */
 .text {
   position: absolute;
   color: #ff6fae;
@@ -60,11 +65,12 @@ input {
     opacity: 0;
   }
   to {
-    transform: translate3d(var(--x), calc(var(--y) - 220px), var(--z));
+    transform: translate3d(var(--x), calc(var(--y) - 260px), var(--z));
     opacity: 1;
   }
 }
 
+/* ===== TIM ===== */
 .heart {
   position: absolute;
   color: #ff4d94;
@@ -78,7 +84,7 @@ input {
     opacity: 1;
   }
   to {
-    transform: translateY(-320px);
+    transform: translateY(-360px);
     opacity: 0;
   }
 }
@@ -87,99 +93,70 @@ input {
 
 <body>
 
-<div id="inputBox">
-  <input id="stt" type="number" min="1" max="35" placeholder="Nhập số thứ tự (1–35)">
+<!-- MÀN HÌNH NHẬP -->
+<div id="inputOverlay">
+  <div id="inputBox">
+    <input id="stt" type="number" min="1" max="35" placeholder="Nhập số thứ tự (1–35)">
+  </div>
 </div>
 
+<!-- KHÔNG GIAN -->
 <div id="scene">
   <div id="world"></div>
 </div>
 
 <script>
-const wishes = {
-  1: "STT: 1",
-  2: "STT: 2",
-  3: "STT: 3",
-  4: "STT: 4",
-  5: "STT: 5",
-  6: "STT: 6",
-  7: "STT: 7",
-  8: "STT: 8",
-  9: "STT: 9",
-  10: "STT: 10",
-  11: "STT: 11",
-  12: "STT: 12",
-  13: "STT: 13",
-  14: "STT: 14",
-  15: "STT: 15",
-  16: "STT: 16",
-  17: "STT: 17",
-  18: "STT: 18",
-  19: "STT: 19",
-  20: "STT: 20",
-  21: "STT: 21",
-  22: "STT: 22",
-  23: "STT: 23",
-  24: "STT: 24",
-  25: "STT: 25",
-  26: "STT: 26",
-  27: "STT: 27",
-  28: "STT: 28",
-  29: "STT: 29",
-  30: "STT: 30",
-  31: "STT: 31",
-  32: "STT: 32",
-  33: "STT: 33",
-  34: "STT: 34",
-  35: "STT: 35"
-};
+const wishes = {};
+for (let i = 1; i <= 35; i++) wishes[i] = "STT: " + i;
 
 const world = document.getElementById("world");
 const input = document.getElementById("stt");
-const inputBox = document.getElementById("inputBox");
+const overlay = document.getElementById("inputOverlay");
 
 input.addEventListener("change", () => {
   const v = input.value;
   if (!wishes[v]) return;
-  inputBox.style.display = "none";
+  overlay.style.display = "none";
   startEffect(wishes[v]);
 });
 
+/* ===== HIỆU ỨNG ===== */
 function startEffect(text) {
   setInterval(() => {
     const el = document.createElement("div");
     el.className = "text";
     el.innerText = text;
 
-    const x = (Math.random() - 0.5) * 220;
-    const y = (Math.random() - 0.5) * 120;
-    const z = (Math.random() - 0.5) * 240;
+    const radius = 420;
+    const angle = Math.random() * Math.PI * 2;
+
+    const x = Math.cos(angle) * (Math.random() * radius);
+    const y = (Math.random() - 0.5) * 220;
+    const z = (Math.random() - 0.5) * 500;
 
     el.style.setProperty("--x", x + "px");
     el.style.setProperty("--y", y + "px");
     el.style.setProperty("--z", z + "px");
-    el.style.animationDuration = (8 + Math.random() * 6) + "s";
+    el.style.animationDuration = (8 + Math.random() * 7) + "s";
 
     world.appendChild(el);
-setTimeout(() => el.remove(), 14000);
-  }, 260);
+    setTimeout(() => el.remove(), 16000);
+  }, 240);
 
   setInterval(() => {
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "💗";
-    h.style.left = Math.random() * window.innerWidth + "px";
+h.style.left = Math.random() * window.innerWidth + "px";
     h.style.bottom = "0px";
-    h.style.animationDuration = (4 + Math.random() * 4) + "s";
+    h.style.animationDuration = (4 + Math.random() * 5) + "s";
     document.body.appendChild(h);
     setTimeout(() => h.remove(), 7000);
-  }, 140);
+  }, 130);
 }
 
-// Xoay 3D bằng chuột & cảm ứng
-let rx = 0, ry = 0;
-let dragging = false;
-let lastX, lastY;
+/* ===== XOAY 3D ===== */
+let rx = 0, ry = 0, dragging = false, lx = 0, ly = 0;
 
 function update() {
   world.style.transform =
@@ -188,35 +165,31 @@ function update() {
 
 document.addEventListener("mousedown", e => {
   dragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
+  lx = e.clientX;
+  ly = e.clientY;
 });
-
 document.addEventListener("mouseup", () => dragging = false);
-
 document.addEventListener("mousemove", e => {
   if (!dragging) return;
-  ry += (e.clientX - lastX) * 0.2;
-  rx -= (e.clientY - lastY) * 0.2;
-  lastX = e.clientX;
-  lastY = e.clientY;
+  ry += (e.clientX - lx) * 0.18;
+  rx -= (e.clientY - ly) * 0.18;
+  lx = e.clientX;
+  ly = e.clientY;
   update();
 });
 
 document.addEventListener("touchstart", e => {
   dragging = true;
-  lastX = e.touches[0].clientX;
-  lastY = e.touches[0].clientY;
+  lx = e.touches[0].clientX;
+  ly = e.touches[0].clientY;
 });
-
 document.addEventListener("touchend", () => dragging = false);
-
 document.addEventListener("touchmove", e => {
   if (!dragging) return;
-  ry += (e.touches[0].clientX - lastX) * 0.2;
-  rx -= (e.touches[0].clientY - lastY) * 0.2;
-  lastX = e.touches[0].clientX;
-  lastY = e.touches[0].clientY;
+  ry += (e.touches[0].clientX - lx) * 0.18;
+  rx -= (e.touches[0].clientY - ly) * 0.18;
+  lx = e.touches[0].clientX;
+  ly = e.touches[0].clientY;
   update();
 });
 </script>
