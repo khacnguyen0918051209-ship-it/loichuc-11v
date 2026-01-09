@@ -14,8 +14,6 @@ html, body {
   overflow: hidden;
   font-family: Arial, sans-serif;
 }
-
-/* ===== OVERLAY NHẬP ===== */
 #overlay {
   position: fixed;
   inset: 0;
@@ -51,8 +49,6 @@ html, body {
   border: none;
   outline: none;
 }
-
-/* ===== KHÔNG GIAN 3D ===== */
 #scene {
   width: 100%;
   height: 100%;
@@ -66,8 +62,6 @@ html, body {
   transform-style: preserve-3d;
   transform: translate(-50%, -50%);
 }
-
-/* ===== CHỮ ===== */
 .text {
   position: absolute;
   color: #ff6fae;
@@ -87,8 +81,6 @@ html, body {
     opacity: 1;
   }
 }
-
-/* ===== TIM ===== */
 .heart {
   position: absolute;
   color: #ff4d94;
@@ -110,8 +102,6 @@ html, body {
 </head>
 
 <body>
-
-<!-- OVERLAY NHẬP -->
 <div id="overlay">
   <div id="card">
     <h1>💗 Nhập số thứ tự</h1>
@@ -119,14 +109,11 @@ html, body {
     <input id="stt" type="number" min="1" max="35" placeholder="STT của bạn">
   </div>
 </div>
-
-<!-- KHÔNG GIAN -->
 <div id="scene">
   <div id="world"></div>
 </div>
 
 <script>
-/* ===== DỮ LIỆU ===== */
 const wishes = {};
 for (let i = 1; i <= 35; i++) wishes[i] = "STT: " + i;
 
@@ -140,33 +127,27 @@ input.addEventListener("change", () => {
   overlay.style.display = "none";
   startEffect(wishes[v]);
 });
-
-/* ===== HIỆU ỨNG CHỮ + TIM ===== */
 function startEffect(text) {
+ setInterval(() => {
+  const el = document.createElement("div");
+  el.className = "text";
+  el.innerText = text;
 
-  // chữ (RẤT NHIỀU)
-  setInterval(() => {
-    for (let i = 0; i < 3; i++) {
-      const el = document.createElement("div");
-      el.className = "text";
-      el.innerText = text;
+  const radius = 650;
+  const angle = Math.random() * Math.PI * 2;
 
-      const radius = 650;
-      const angle = Math.random() * Math.PI * 2;
+  const x = Math.cos(angle) * (Math.random() * radius);
+  const y = (Math.random() - 0.5) * 360;
+  const z = (Math.random() - 0.5) * 900;
 
-      const x = Math.cos(angle) * (Math.random() * radius);
-      const y = (Math.random() - 0.5) * 360;
-const z = (Math.random() - 0.5) * 900;
+  el.style.setProperty("--x", x + "px");
+  el.style.setProperty("--y", y + "px");
+  el.style.setProperty("--z", z + "px");
+  el.style.animationDuration = (10 + Math.random() * 8) + "s";
 
-      el.style.setProperty("--x", x + "px");
-      el.style.setProperty("--y", y + "px");
-      el.style.setProperty("--z", z + "px");
-      el.style.animationDuration = (10 + Math.random() * 8) + "s";
-
-      world.appendChild(el);
-      setTimeout(() => el.remove(), 20000);
-    }
-  }, 200);
+  world.appendChild(el);
+  setTimeout(() => el.remove(), 20000);
+}, 300);
 
   // tim
   setInterval(() => {
@@ -180,8 +161,6 @@ const z = (Math.random() - 0.5) * 900;
     setTimeout(() => h.remove(), 9000);
   }, 120);
 }
-
-/* ===== XOAY 3D ===== */
 let rx = 0, ry = 0, drag = false, lx = 0, ly = 0;
 
 function update() {
@@ -219,3 +198,4 @@ document.addEventListener("touchmove", e => {
 
 </body>
 </html>
+
