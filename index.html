@@ -2,80 +2,85 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Lời chúc bí mật</title>
+<title>Lời chúc</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
+html, body {
   margin: 0;
+  width: 100%;
+  height: 100%;
   background: black;
   overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
 #inputBox {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
 }
 
-#inputBox input {
-  font-size: 22px;
-  padding: 10px 16px;
-  width: 200px;
-  border-radius: 8px;
+input {
+  padding: 14px 22px;
+  font-size: 18px;
+  border-radius: 10px;
   border: none;
-  text-align: center;
+  outline: none;
 }
 
 #scene {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   perspective: 900px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 #world {
-  width: 420px;
-  height: 420px;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.text3d {
   position: absolute;
-  left: 50%;
   top: 50%;
-  color: #ff5fa2;
-  font-size: 18px;
-  text-shadow: 0 0 12px #ff5fa2;
-  white-space: nowrap;
+  left: 50%;
   transform-style: preserve-3d;
-  animation: float 12s linear infinite;
+  transform: translate(-50%, -50%);
 }
 
-@keyframes float {
-  0%   { transform: translate3d(var(--x), var(--y), var(--z)); opacity: 0 }
-  10%  { opacity: 1 }
-  90%  { opacity: 1 }
-  100% { transform: translate3d(var(--x2), var(--y2), var(--z2)); opacity: 0 }
+.text {
+  position: absolute;
+  color: #ff6fae;
+  font-size: 18px;
+  text-shadow: 0 0 12px #ff4d94;
+  white-space: nowrap;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translate3d(var(--x), var(--y), var(--z));
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(var(--x), calc(var(--y) - 220px), var(--z));
+    opacity: 1;
+  }
 }
 
 .heart {
   position: absolute;
-  color: pink;
+  color: #ff4d94;
   font-size: 14px;
-  animation: heart 6s linear infinite;
+  animation: heartUp linear infinite;
 }
 
-@keyframes heart {
-  from { transform: translateY(0) scale(1); opacity: 1 }
-  to   { transform: translateY(-200px) scale(1.6); opacity: 0 }
+@keyframes heartUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-320px);
+    opacity: 0;
+  }
 }
 </style>
 </head>
@@ -83,7 +88,7 @@ body {
 <body>
 
 <div id="inputBox">
-  <input id="sttInput" type="number" placeholder="Nhập STT (1-35)">
+  <input id="stt" type="number" min="1" max="35" placeholder="Nhập số thứ tự (1–35)">
 </div>
 
 <div id="scene">
@@ -129,38 +134,35 @@ const wishes = {
   35: "STT: 35"
 };
 
-const input = document.getElementById("sttInput");
-const box = document.getElementById("inputBox");
 const world = document.getElementById("world");
+const input = document.getElementById("stt");
+const inputBox = document.getElementById("inputBox");
 
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    const n = Number(input.value);
-    if (!wishes[n]) return alert("STT không hợp lệ");
-    box.style.display = "none";
-    startEffect(wishes[n]);
-  }
+input.addEventListener("change", () => {
+  const v = input.value;
+  if (!wishes[v]) return;
+  inputBox.style.display = "none";
+  startEffect(wishes[v]);
 });
 
 function startEffect(text) {
-  for (let i = 0; i < 30; i++) {
+  setInterval(() => {
     const el = document.createElement("div");
-    el.className = "text3d";
+    el.className = "text";
     el.innerText = text;
 
-    const x = (Math.random() - 0.5) * 200;
-    const y = (Math.random() - 0.5) * 200;
-    const z = (Math.random() - 0.5) * 300;
+    const x = (Math.random() - 0.5) * 220;
+    const y = (Math.random() - 0.5) * 120;
+    const z = (Math.random() - 0.5) * 240;
 
-    el.style.setProperty("--x", `${x}px`);
-    el.style.setProperty("--y", `${y}px`);
-el.style.setProperty("--z", `${z}px`);
-    el.style.setProperty("--x2", `${x}px`);
-    el.style.setProperty("--y2", `${y - 80}px`);
-    el.style.setProperty("--z2", `${z + 200}px`);
+    el.style.setProperty("--x", x + "px");
+    el.style.setProperty("--y", y + "px");
+    el.style.setProperty("--z", z + "px");
+    el.style.animationDuration = (8 + Math.random() * 6) + "s";
 
     world.appendChild(el);
-  }
+setTimeout(() => el.remove(), 14000);
+  }, 260);
 
   setInterval(() => {
     const h = document.createElement("div");
@@ -168,16 +170,54 @@ el.style.setProperty("--z", `${z}px`);
     h.innerText = "💗";
     h.style.left = Math.random() * window.innerWidth + "px";
     h.style.bottom = "0px";
+    h.style.animationDuration = (4 + Math.random() * 4) + "s";
     document.body.appendChild(h);
-    setTimeout(() => h.remove(), 6000);
-  }, 200);
+    setTimeout(() => h.remove(), 7000);
+  }, 140);
 }
 
+// Xoay 3D bằng chuột & cảm ứng
 let rx = 0, ry = 0;
+let dragging = false;
+let lastX, lastY;
+
+function update() {
+  world.style.transform =
+    `translate(-50%, -50%) rotateX(${rx}deg) rotateY(${ry}deg)`;
+}
+
+document.addEventListener("mousedown", e => {
+  dragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+
+document.addEventListener("mouseup", () => dragging = false);
+
 document.addEventListener("mousemove", e => {
-  ry = (e.clientX / window.innerWidth - 0.5) * 30;
-  rx = -(e.clientY / window.innerHeight - 0.5) * 30;
-  world.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  if (!dragging) return;
+  ry += (e.clientX - lastX) * 0.2;
+  rx -= (e.clientY - lastY) * 0.2;
+  lastX = e.clientX;
+  lastY = e.clientY;
+  update();
+});
+
+document.addEventListener("touchstart", e => {
+  dragging = true;
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+});
+
+document.addEventListener("touchend", () => dragging = false);
+
+document.addEventListener("touchmove", e => {
+  if (!dragging) return;
+  ry += (e.touches[0].clientX - lastX) * 0.2;
+  rx -= (e.touches[0].clientY - lastY) * 0.2;
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+  update();
 });
 </script>
 
