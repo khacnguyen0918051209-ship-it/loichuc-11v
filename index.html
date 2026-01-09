@@ -15,18 +15,36 @@ html, body {
   font-family: Arial, sans-serif;
 }
 
-/* ===== MÀN HÌNH NHẬP ===== */
-#inputOverlay {
+/* ===== OVERLAY NHẬP ===== */
+#overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: radial-gradient(circle, #111, #000);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 20;
 }
 
-#inputBox input {
+#card {
+  background: rgba(0,0,0,0.6);
+  padding: 40px 50px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 40px #ff4d94;
+}
+
+#card h1 {
+  color: #ff6fae;
+  margin-bottom: 10px;
+}
+
+#card p {
+  color: #aaa;
+  margin-bottom: 25px;
+}
+
+#stt {
   padding: 16px 26px;
   font-size: 20px;
   border-radius: 14px;
@@ -38,7 +56,7 @@ html, body {
 #scene {
   width: 100%;
   height: 100%;
-  perspective: 1200px;
+  perspective: 1600px;
 }
 
 #world {
@@ -54,18 +72,18 @@ html, body {
   position: absolute;
   color: #ff6fae;
   font-size: 18px;
-  text-shadow: 0 0 12px #ff4d94;
+  text-shadow: 0 0 14px #ff4d94;
   white-space: nowrap;
-  animation: floatUp linear infinite;
+  animation: float linear infinite;
 }
 
-@keyframes floatUp {
+@keyframes float {
   from {
     transform: translate3d(var(--x), var(--y), var(--z));
     opacity: 0;
   }
   to {
-    transform: translate3d(var(--x), calc(var(--y) - 260px), var(--z));
+    transform: translate3d(var(--x), calc(var(--y) - 420px), var(--z));
     opacity: 1;
   }
 }
@@ -75,16 +93,16 @@ html, body {
   position: absolute;
   color: #ff4d94;
   font-size: 14px;
-  animation: heartUp linear infinite;
+  animation: heart linear infinite;
 }
 
-@keyframes heartUp {
+@keyframes heart {
   from {
     transform: translateY(0);
     opacity: 1;
   }
   to {
-    transform: translateY(-360px);
+    transform: translateY(-480px);
     opacity: 0;
   }
 }
@@ -93,10 +111,12 @@ html, body {
 
 <body>
 
-<!-- MÀN HÌNH NHẬP -->
-<div id="inputOverlay">
-  <div id="inputBox">
-    <input id="stt" type="number" min="1" max="35" placeholder="Nhập số thứ tự (1–35)">
+<!-- OVERLAY NHẬP -->
+<div id="overlay">
+  <div id="card">
+    <h1>💗 Nhập số thứ tự</h1>
+    <p>Từ 1 đến 35 để xem lời chúc dành riêng cho bạn</p>
+    <input id="stt" type="number" min="1" max="35" placeholder="STT của bạn">
   </div>
 </div>
 
@@ -106,12 +126,13 @@ html, body {
 </div>
 
 <script>
+/* ===== DỮ LIỆU ===== */
 const wishes = {};
 for (let i = 1; i <= 35; i++) wishes[i] = "STT: " + i;
 
 const world = document.getElementById("world");
+const overlay = document.getElementById("overlay");
 const input = document.getElementById("stt");
-const overlay = document.getElementById("inputOverlay");
 
 input.addEventListener("change", () => {
   const v = input.value;
@@ -120,43 +141,48 @@ input.addEventListener("change", () => {
   startEffect(wishes[v]);
 });
 
-/* ===== HIỆU ỨNG ===== */
+/* ===== HIỆU ỨNG CHỮ + TIM ===== */
 function startEffect(text) {
+
+  // chữ (RẤT NHIỀU)
   setInterval(() => {
-    const el = document.createElement("div");
-    el.className = "text";
-    el.innerText = text;
+    for (let i = 0; i < 3; i++) {
+      const el = document.createElement("div");
+      el.className = "text";
+      el.innerText = text;
 
-    const radius = 420;
-    const angle = Math.random() * Math.PI * 2;
+      const radius = 650;
+      const angle = Math.random() * Math.PI * 2;
 
-    const x = Math.cos(angle) * (Math.random() * radius);
-    const y = (Math.random() - 0.5) * 220;
-    const z = (Math.random() - 0.5) * 500;
+      const x = Math.cos(angle) * (Math.random() * radius);
+      const y = (Math.random() - 0.5) * 360;
+const z = (Math.random() - 0.5) * 900;
 
-    el.style.setProperty("--x", x + "px");
-    el.style.setProperty("--y", y + "px");
-    el.style.setProperty("--z", z + "px");
-    el.style.animationDuration = (8 + Math.random() * 7) + "s";
+      el.style.setProperty("--x", x + "px");
+      el.style.setProperty("--y", y + "px");
+      el.style.setProperty("--z", z + "px");
+      el.style.animationDuration = (10 + Math.random() * 8) + "s";
 
-    world.appendChild(el);
-    setTimeout(() => el.remove(), 16000);
-  }, 240);
+      world.appendChild(el);
+      setTimeout(() => el.remove(), 20000);
+    }
+  }, 200);
 
+  // tim
   setInterval(() => {
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "💗";
-h.style.left = Math.random() * window.innerWidth + "px";
+    h.style.left = Math.random() * window.innerWidth + "px";
     h.style.bottom = "0px";
-    h.style.animationDuration = (4 + Math.random() * 5) + "s";
+    h.style.animationDuration = (5 + Math.random() * 5) + "s";
     document.body.appendChild(h);
-    setTimeout(() => h.remove(), 7000);
-  }, 130);
+    setTimeout(() => h.remove(), 9000);
+  }, 120);
 }
 
 /* ===== XOAY 3D ===== */
-let rx = 0, ry = 0, dragging = false, lx = 0, ly = 0;
+let rx = 0, ry = 0, drag = false, lx = 0, ly = 0;
 
 function update() {
   world.style.transform =
@@ -164,30 +190,27 @@ function update() {
 }
 
 document.addEventListener("mousedown", e => {
-  dragging = true;
-  lx = e.clientX;
-  ly = e.clientY;
+  drag = true; lx = e.clientX; ly = e.clientY;
 });
-document.addEventListener("mouseup", () => dragging = false);
+document.addEventListener("mouseup", () => drag = false);
 document.addEventListener("mousemove", e => {
-  if (!dragging) return;
-  ry += (e.clientX - lx) * 0.18;
-  rx -= (e.clientY - ly) * 0.18;
-  lx = e.clientX;
-  ly = e.clientY;
+  if (!drag) return;
+  ry += (e.clientX - lx) * 0.15;
+  rx -= (e.clientY - ly) * 0.15;
+  lx = e.clientX; ly = e.clientY;
   update();
 });
 
 document.addEventListener("touchstart", e => {
-  dragging = true;
+  drag = true;
   lx = e.touches[0].clientX;
   ly = e.touches[0].clientY;
 });
-document.addEventListener("touchend", () => dragging = false);
+document.addEventListener("touchend", () => drag = false);
 document.addEventListener("touchmove", e => {
-  if (!dragging) return;
-  ry += (e.touches[0].clientX - lx) * 0.18;
-  rx -= (e.touches[0].clientY - ly) * 0.18;
+  if (!drag) return;
+  ry += (e.touches[0].clientX - lx) * 0.15;
+  rx -= (e.touches[0].clientY - ly) * 0.15;
   lx = e.touches[0].clientX;
   ly = e.touches[0].clientY;
   update();
